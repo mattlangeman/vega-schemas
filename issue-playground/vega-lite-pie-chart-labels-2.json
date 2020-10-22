@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "description": "A pie chart with aligned labels",
+  "description": "A pie chart with misaligned labels",
   "data": {
     "values": [
       {"category": "Category 1", "value": 4},
@@ -18,7 +18,7 @@
       "mark": {"type": "text", "radius": 100},
       "encoding": {
         "text": {
-          "field": "category",
+          "field": "value",
           "type": "nominal"
         },
         "color": {"value": "#000000"}
