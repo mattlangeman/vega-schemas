@@ -1,0 +1,101 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "description": "A pie chart with misaligned labels",
+    "background": "white",
+    "padding": 5,
+    "width": 200,
+    "height": 200,
+    "style": "cell",
+    "encode": {"update": {"stroke": {"value": null}}},
+    "data": [
+      {
+        "name": "source_0",
+        "values": [
+          {"category": "Category 1", "value": 4},
+          {"category": "Category 2", "value": 12},
+          {"category": "Category 3", "value": 8}
+        ]
+      },
+      {
+        "name": "data_0",
+        "source": "source_0",
+        "transform": [
+          {
+            "type": "stack",
+            "groupby": [],
+            "field": "value",
+            "sort": {"field": ["category"], "order": ["ascending"]},
+            "as": ["value_start", "value_end"],
+            "offset": "zero"
+          },
+          {
+            "type": "filter",
+            "expr": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "name": "layer_0_marks",
+        "type": "arc",
+        "style": ["arc"],
+        "from": {"data": "data_0"},
+        "encode": {
+          "update": {
+            "outerRadius": {"value": 85},
+            "fill": {"scale": "color", "field": "category"},
+            "description": {
+              "signal": "\"value: \" + (format(datum[\"value\"], \"\")) + \"; category: \" + (isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"])"
+            },
+            "x": {"signal": "width", "mult": 0.5},
+            "y": {"signal": "height", "mult": 0.5},
+            "innerRadius": {"value": 0},
+            "startAngle": {"scale": "theta", "field": "value_end"},
+            "endAngle": {"scale": "theta", "field": "value_start"}
+          }
+        }
+      },
+      {
+        "name": "layer_1_marks",
+        "type": "text",
+        "style": ["text"],
+        "from": {"data": "data_0"},
+        "encode": {
+          "update": {
+            "radius": {"value": 100},
+            "fill": {"value": "#000000"},
+            "description": {
+              "signal": "\"value: \" + (format(datum[\"value\"], \"\")) + \"; category: \" + (isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"])"
+            },
+            "x": {"signal": "width", "mult": 0.5},
+            "y": {"signal": "height", "mult": 0.5},
+            "text": {
+              "signal": "isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"]"
+            },
+            "align": {"value": "center"},
+            "baseline": {"value": "middle"},
+            "theta": {
+              "signal": "scale(\"theta\", 0.5 * datum[\"value_start\"] + 0.5 * datum[\"value_end\"])"
+            }
+          }
+        }
+      }
+    ],
+    "scales": [
+      {
+        "name": "theta",
+        "type": "linear",
+        "domain": {"data": "data_0", "fields": ["value_start", "value_end"]},
+        "range": [0, 6.283185307179586],
+        "zero": true
+      },
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": {"data": "data_0", "field": "category", "sort": true},
+        "range": "category"
+      }
+    ],
+    "legends": [{"fill": "color", "symbolType": "circle", "title": "category"}]
+  }
