@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega/v5.json",
-    "description": "A pie chart with aligned labels",
+    "description": "A pie chart with misaligned labels",
     "background": "white",
     "padding": 5,
     "width": 200,
@@ -17,7 +17,7 @@
         ]
       },
       {
-        "name": "data_0",
+        "name": "data_1",
         "source": "source_0",
         "transform": [
           {
@@ -33,6 +33,24 @@
             "expr": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
           }
         ]
+      },
+      {
+        "name": "data_2",
+        "source": "source_0",
+        "transform": [
+          {
+            "type": "stack",
+            "groupby": [],
+            "field": "value",
+            "sort": {"field": ["value"], "order": ["ascending"]},
+            "as": ["value_start", "value_end"],
+            "offset": "zero"
+          },
+          {
+            "type": "filter",
+            "expr": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
+          }
+        ]
       }
     ],
     "marks": [
@@ -40,7 +58,7 @@
         "name": "layer_0_marks",
         "type": "arc",
         "style": ["arc"],
-        "from": {"data": "data_0"},
+        "from": {"data": "data_1"},
         "encode": {
           "update": {
             "outerRadius": {"value": 85},
@@ -60,18 +78,18 @@
         "name": "layer_1_marks",
         "type": "text",
         "style": ["text"],
-        "from": {"data": "data_0"},
+        "from": {"data": "data_2"},
         "encode": {
           "update": {
             "radius": {"value": 100},
             "fill": {"value": "#000000"},
             "description": {
-              "signal": "\"value: \" + (format(datum[\"value\"], \"\")) + \"; category: \" + (isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"])"
+              "signal": "\"value: \" + (format(datum[\"value\"], \"\"))"
             },
             "x": {"signal": "width", "mult": 0.5},
             "y": {"signal": "height", "mult": 0.5},
             "text": {
-              "signal": "isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"]"
+              "signal": "isValid(datum[\"value\"]) ? datum[\"value\"] : \"\"+datum[\"value\"]"
             },
             "align": {"value": "center"},
             "baseline": {"value": "middle"},
@@ -86,14 +104,21 @@
       {
         "name": "theta",
         "type": "linear",
-        "domain": {"data": "data_0", "fields": ["value_start", "value_end"]},
+        "domain": {
+          "fields": [
+            {"data": "data_1", "field": "value_start"},
+            {"data": "data_1", "field": "value_end"},
+            {"data": "data_2", "field": "value_start"},
+            {"data": "data_2", "field": "value_end"}
+          ]
+        },
         "range": [0, 6.283185307179586],
         "zero": true
       },
       {
         "name": "color",
         "type": "ordinal",
-        "domain": {"data": "data_0", "field": "category", "sort": true},
+        "domain": {"data": "data_1", "field": "category", "sort": true},
         "range": "category"
       }
     ],
