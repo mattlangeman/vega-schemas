@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "A pie chart with aligned labels",
+  "description": "A pie chart with misaligned labels",
   "background": "white",
   "padding": 5,
   "width": 200,
@@ -42,10 +42,7 @@
           "type": "stack",
           "groupby": [],
           "field": "value",
-          "sort": {
-            "field": ["category", "value"],
-            "order": ["ascending", "ascending"]
-          },
+          "sort": {"field": ["value"], "order": ["ascending"]},
           "as": ["value_start", "value_end"],
           "offset": "zero"
         },
@@ -85,9 +82,9 @@
       "encode": {
         "update": {
           "radius": {"value": 100},
-          "fill": {"scale": "color", "field": "category"},
+          "fill": {"value": "#000000"},
           "description": {
-            "signal": "\"value: \" + (format(datum[\"value\"], \"\")) + \"; category: \" + (isValid(datum[\"category\"]) ? datum[\"category\"] : \"\"+datum[\"category\"])"
+            "signal": "\"value: \" + (format(datum[\"value\"], \"\"))"
           },
           "x": {"signal": "width", "mult": 0.5},
           "y": {"signal": "height", "mult": 0.5},
@@ -119,13 +116,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {
-        "fields": [
-          {"data": "data_1", "field": "category"},
-          {"data": "data_2", "field": "category"}
-        ],
-        "sort": true
-      },
+      "domain": {"data": "data_1", "field": "category", "sort": true},
       "range": "category"
     }
   ],
