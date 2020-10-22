@@ -1,0 +1,29 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "A pie chart with aligned labels",
+  "data": {
+    "values": [
+      {"category": "Category 1", "value": 4},
+      {"category": "Category 2", "value": 12},
+      {"category": "Category 3", "value": 8}
+    ]
+  },
+  "encoding": {
+    "theta": {"field": "value", "type": "quantitative", "stack": true},
+    "color": {"field": "category", "type": "nominal"}
+  },
+  "layer": [
+    {"mark": {"type": "arc", "outerRadius": 85}},
+    {
+      "mark": {"type": "text", "radius": 100},
+      "encoding": {
+        "text": {
+          "field": "category",
+          "type": "nominal"
+        },
+        "color": {"value": "#000000"}
+      }
+    }
+  ],
+  "view": {"stroke": null}
+}
